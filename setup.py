@@ -1,6 +1,7 @@
 from setuptools import setup,find_packages
 
 def get_packages(file_path):
+    '''This function will return the list of requirements'''
     requirements=[]
     
     E_AND_DOT='-e .'
