@@ -1,5 +1,5 @@
 import sys
-import logging
+from logger import logging
 
 #This function is used to get detail of all the error messages we get. It shows the line number and the file name where the error occured
 def error_message_detail(error, error_detail: sys):
@@ -30,6 +30,6 @@ if __name__=="__main__":
     try:
         a=1/0
     except Exception as e:
+        logging.info("Divide by zero error")
         raise CustomException(e,sys) from e
-        logger.logging.info("Divide by zero error")
             
