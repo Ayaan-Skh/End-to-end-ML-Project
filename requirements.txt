@@ -7,4 +7,5 @@ scikit-learn
 joblib
 xgboost
 catboost
+dill
 # -e .

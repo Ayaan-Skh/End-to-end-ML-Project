@@ -5,6 +5,8 @@ from src.logger import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
+from data_transformation import DataTransformation,DataTransformationConfig
+
 
 ##This class will be used to take any type of input
 @dataclass
@@ -29,21 +31,28 @@ class DataIngestion:
             ##Initially we are using stored data later we can change this to database or any other source
             df=pd.read_csv('notebook\data\stud.csv')
             logging.info("Read the dataset information")
+            
+            ## Create the directory for the artifacts if it doesn't exist
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path),exist_ok=True)
             
+            ## Save the raw data to the specified path
             df.to_csv(self.ingestion_config.raw_data_path,index=False,header=True)
             logging.info("Raw data added to artifacts folder")
             
             logging.info("Initialize train test split")
+            ## Split the data into training and testing sets
             train_set,test_set=train_test_split(df,test_size=0.25,random_state=42)
             
+            ## Save the training set to the specified path
             train_set.to_csv(self.ingestion_config.train_data_path,index=False,header=True)
             logging.info("Added training data")
             
+            ## Save the test set to the specified path
             test_set.to_csv(self.ingestion_config.test_data_path,index=False,header=True)
             logging.info("Added test data")
             logging.info("Data ingestion completed")
             
+            ## Return the paths to the training and testing data
             return (
                 self.ingestion_config.train_data_path,
                 self.ingestion_config.test_data_path
@@ -54,4 +63,8 @@ class DataIngestion:
         
 if __name__ == '__main__':
     obj = DataIngestion()
-    obj.initiate_data_ingestion()
+    train_data,test_data=obj.initiate_data_ingestion()
+    
+    data_transformation=DataTransformation()
+    data_transformation.initiate_data_transformation(train_data,test_data)
+    
