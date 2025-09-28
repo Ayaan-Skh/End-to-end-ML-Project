@@ -15,11 +15,22 @@ import sys
 from src.utils import save_object  ## used for saving the pickle file
 
 ## It will help to give the path or input required for data transformation
+@dataclass
 class DataTransformationConfig:
+    """
+    Configuration class for data transformation, defining file paths.
+    """
     processor_obj_file_path=os.path.join("artifacts",'processor.pkl')
     
 class DataTransformation:
+    """
+    This class handles the data transformation process for the machine learning pipeline.
+    It includes methods for data preprocessing, feature engineering, and splitting data into training and testing sets.
+    """
     def __init__(self):## This initiallizes the data transformation configuration
+        """
+        Initializes the DataTransformation class with a configuration object.
+        """
         self.data_transformation_config=DataTransformationConfig()
         
         ## This function will be used to get the data transformation features and transform them
@@ -35,6 +46,11 @@ class DataTransformation:
                 'test_preparation_course'
             ]
             
+            """
+            Pipeline for numerical features:
+            1. Impute missing values using the median strategy.
+            2. Scale the features using StandardScaler.
+            """
             num_pipeline=Pipeline(
                 steps=[
                     ('imputer',SimpleImputer(strategy='median')),
@@ -43,6 +59,12 @@ class DataTransformation:
             )
             logging.info('Numerical columns standard scaling completed')
             
+            """
+            Pipeline for categorical features:
+            1. Impute missing values using the most frequent strategy.
+            2. Encode categorical features using OneHotEncoder.
+            3. Scale the features using StandardScaler.
+            """
             cate_pipeline=Pipeline(
                 steps=[
                     ('imputer',SimpleImputer(strategy='most_frequent')),
@@ -52,6 +74,9 @@ class DataTransformation:
             )
             logging.info('Categorical columns oneHotEncoding completed')
             
+            """
+            ColumnTransformer applies different transformers to different columns.
+            """
             preprocessor=ColumnTransformer(
                 transformers=[
                 ('num_pipeline',num_pipeline,numerical_columns),
@@ -66,6 +91,16 @@ class DataTransformation:
             raise CustomException(e,sys)
                 
     def initiate_data_transformation(self,train_path,test_path):
+        """
+        Initiates the data transformation process.
+
+        Args:
+            train_path (str): Path to the training data CSV file.
+            test_path (str): Path to the testing data CSV file.
+
+        Returns:
+            tuple: A tuple containing the transformed training data, transformed testing data, and the path to the preprocessor object.
+        """
         try:
             train_df=pd.read_csv(train_path)
             test_df=pd.read_csv(test_path)
@@ -87,11 +122,17 @@ class DataTransformation:
 
             logging.info("Applying preprocessing object on the training dataframe and testing dataframe")
             
+            """
+            Transform training and testing data using the preprocessor object.
+            """
             input_feature_train_arr=processing_obj.fit_transform(input_feature_train_df)
             input_feature_test_arr=processing_obj.transform(input_feature_test_df)
 
             logging.info("Saved preprocessing object")
 
+            """
+            Concatenate the transformed input features with the target feature.
+            """
             train_arr=np.c_[input_feature_train_arr,np.array(target_feature_train_df)]
             test_arr=np.c_[input_feature_test_arr,np.array(target_feature_test_df)]
 
@@ -108,5 +149,3 @@ class DataTransformation:
 
         except Exception as e:
             raise CustomException(e,sys)
-        
-        
