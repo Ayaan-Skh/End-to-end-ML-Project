@@ -23,7 +23,7 @@ class DataIngestion:
     ## This function will initialize the data ingestion configuration
     def __init__(self):
         self.ingestion_config=DataIngestionConfig()
-        
+            
     ## This function will initiate the data ingestion form the source
     def initiate_data_ingestion(self):
         logging.info("Entered the data ingestion component")
