@@ -35,35 +35,8 @@ It follows a component-based structure with stages for:
 ## 🧪 Model Performance
 | Metric | Score |
 |--------|--------|
-| **R² Score** | **8.88** |
+| **R² Score** | **0.88** |
 | **Best Model** | RandomForestRegressor (tuned) |
-
----
-
-## ⚙️ Project Structure
-student-performance-prediction/
-│
-├── data/
-│ └── student_scores.csv
-│
-├── src/
-│ ├── components/
-│ │ ├── data_ingestion.py
-│ │ ├── data_preprocessing.py
-│ │ ├── feature_engineering.py
-│ │ └── model_trainer.py
-│ │
-│ ├── utils/
-│ │ └── helpers.py
-│ │
-│ └── pipeline/
-│ └── training_pipeline.py
-│
-├── app.py # Flask application
-├── requirements.txt
-├── README.md
-└── model.pkl # Trained model artifact
-
 
 ---
 
@@ -89,10 +62,14 @@ pip install -r requirements.txt
 # Run the Flask app
 python app.py
 
+Now open your browser and go to:
+👉 http://127.0.0.1:5000/
+
 POST /predict
 {
   "study_hours": 6,
   "attendance": 0.9,
   "assignments_submitted": 12
 }
+
 
